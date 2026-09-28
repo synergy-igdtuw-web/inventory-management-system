@@ -1,0 +1,21 @@
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Dependencies (just in case you add a backend or build tool later)
+node_modules/
