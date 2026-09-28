@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin Dashboard - Synergy Inventory</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Custom Inventory Styles -->
+    <link rel="stylesheet" href="inventory.css">
+    <link rel="shortcut icon" href="img/synergy.jpeg">
+</head>
+
+<body>
+
+    <!-- Header Start -->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="inventory.html"><span><img src="img/FooterLogo.png" alt="" > </span></a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+            <style>
+                .navbar-brand img { width: 80px; height: 40px; }
+            </style>
+           
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="inventory.html" class="nav-link">Home</a></li>
+                    <li class="nav-item active"><a href="inventory.html" class="nav-link">Inventory Portal</a></li>
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" onclick="logout()" class="nav-link text-danger font-weight-bold">Logout (<span id="user-display-name"></span>)</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END nav -->
+
+    <div class="container-fluid mt-5 pt-4 mb-5">
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <h2 class="text-white font-weight-bold">Admin Dashboard</h2>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 id="stat-total-items">0</h3>
+                    <p>Total Items</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 id="stat-issued-items">0</h3>
+                    <p>Items Issued</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 id="stat-upcoming-shifts">0</h3>
+                    <p>Upcoming Shifts</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 id="stat-active-notices">0</h3>
+                    <p>Active Notices</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3 mb-4">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-inventory-tab" data-toggle="pill" href="#v-pills-inventory" role="tab" aria-controls="v-pills-inventory" aria-selected="true">Inventory Management</a>
+                    <a class="nav-link" id="v-pills-issue-tab" data-toggle="pill" href="#v-pills-issue" role="tab" aria-controls="v-pills-issue" aria-selected="false">Issue / Return</a>
+                    <a class="nav-link" id="v-pills-shifts-tab" data-toggle="pill" href="#v-pills-shifts" role="tab" aria-controls="v-pills-shifts" aria-selected="false">Volunteer Shifts</a>
+                    <a class="nav-link" id="v-pills-volunteers-tab" data-toggle="pill" href="#v-pills-volunteers" role="tab" aria-controls="v-pills-volunteers" aria-selected="false">Volunteer Management</a>
+                    <a class="nav-link" id="v-pills-records-tab" data-toggle="pill" href="#v-pills-records" role="tab" aria-controls="v-pills-records" aria-selected="false">Student Records</a>
+                    <a class="nav-link" id="v-pills-notices-tab" data-toggle="pill" href="#v-pills-notices" role="tab" aria-controls="v-pills-notices" aria-selected="false">Notices Management</a>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="col-md-9">
+                <div class="tab-content bg-dark p-4 rounded border border-secondary" id="v-pills-tabContent">
+                    
+                    <!-- A. Inventory Management -->
+                    <div class="tab-pane fade show active" id="v-pills-inventory" role="tabpanel" aria-labelledby="v-pills-inventory-tab">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-white">Inventory Items</h4>
+                            <button class="btn btn-synergy-primary" data-toggle="modal" data-target="#addItemModal">+ Add New Item</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Item Name</th>
+                                        <th>Total Qty</th>
+                                        <th>Available</th>
+                                        <th>Issued</th>
+                                        <th>Damaged</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-inventory-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- B. Issue / Return Equipment -->
+                    <div class="tab-pane fade" id="v-pills-issue" role="tabpanel" aria-labelledby="v-pills-issue-tab">
+                        <h4 class="text-white mb-4">Issue Equipment</h4>
+                        <div class="card bg-secondary mb-4 p-3">
+                            <form id="issue-form" class="row">
+                                <div class="col-md-4">
+                                    <label class="text-white">Select Item</label>
+                                    <select class="form-control" id="issue-item" required></select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-white">Student Roll No</label>
+                                    <input type="text" class="form-control" id="issue-roll" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="text-white">Quantity</label>
+                                    <input type="number" class="form-control" id="issue-qty" min="1" value="1" required>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-synergy-primary w-100 py-2">Issue Item</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <h4 class="text-white mb-4">Pending Returns</h4>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Roll No</th>
+                                        <th>Item</th>
+                                        <th>Qty</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pending-returns-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- C. Volunteer Shifts -->
+                    <div class="tab-pane fade" id="v-pills-shifts" role="tabpanel" aria-labelledby="v-pills-shifts-tab">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-white">Shift Management</h4>
+                            <button class="btn btn-synergy-primary" data-toggle="modal" data-target="#addShiftModal">+ Create Shift</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time Slot</th>
+                                        <th>Assigned Volunteers</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-shifts-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- E. Volunteer Management -->
+                    <div class="tab-pane fade" id="v-pills-volunteers" role="tabpanel" aria-labelledby="v-pills-volunteers-tab">
+                        <h4 class="text-white mb-4">Pending Volunteer Applications</h4>
+                        <div class="table-responsive mb-5">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Name</th>
+                                        <th>Enrollment</th>
+                                        <th>Sports</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-pending-apps-list"></tbody>
+                            </table>
+                        </div>
+
+                        <h4 class="text-white mb-4">Approved Volunteers</h4>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Vol ID</th>
+                                        <th>Name</th>
+                                        <th>Enrollment</th>
+                                        <th>Generated Password</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-approved-volunteers-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- D. Student Records -->
+                    <div class="tab-pane fade" id="v-pills-records" role="tabpanel" aria-labelledby="v-pills-records-tab">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-white">Full Transaction Logs</h4>
+                            <button class="btn btn-outline-success font-weight-bold" onclick="exportCSV()">Export to CSV</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Date Issued</th>
+                                        <th>Roll No</th>
+                                        <th>Item</th>
+                                        <th>Qty</th>
+                                        <th>Issued By</th>
+                                        <th>Status</th>
+                                        <th>Return Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-records-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- F. Notices Management -->
+                    <div class="tab-pane fade" id="v-pills-notices" role="tabpanel" aria-labelledby="v-pills-notices-tab">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-white">Manage Notice Board</h4>
+                            <button class="btn btn-synergy-primary" data-toggle="modal" data-target="#addNoticeModal">+ Add Notice</button>
+                        </div>
+                        <div id="admin-notices-list"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Edit Item Modal -->
+    <div class="modal fade" id="editItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Inventory Item</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-item-id">
+                    <div class="form-group">
+                        <label>Total Quantity</label>
+                        <input type="number" id="edit-item-qty" class="form-control" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mark Damaged (Reduces Available)</label>
+                        <input type="number" id="edit-item-damaged" class="form-control" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-synergy-primary" onclick="saveItemEdit()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div class="modal fade" id="addItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Item</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Item Name</label>
+                        <input type="text" id="add-item-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="add-item-qty" class="form-control" min="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-synergy-primary" onclick="addNewItem()">Add Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Shift Modal -->
+    <div class="modal fade" id="addShiftModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Shift Slot</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="add-shift-date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Time Slot (e.g. 10:00 AM - 01:00 PM)</label>
+                        <input type="text" id="add-shift-time" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-synergy-primary" onclick="addNewShift()">Create Shift</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Volunteer to Shift Modal -->
+    <div class="modal fade" id="assignShiftModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assign Volunteers to Shift</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="assign-shift-id">
+                    <div class="form-group">
+                        <label>Select Volunteer</label>
+                        <select class="form-control" id="assign-shift-volunteer">
+                            <!-- Injected by JS -->
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-synergy-primary" onclick="submitVolunteerAssign()">Assign Volunteer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Notice Modal -->
+    <div class="modal fade" id="addNoticeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Notice</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="add-notice-title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Body (HTML allowed)</label>
+                        <textarea id="add-notice-body" class="form-control" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-synergy-primary" onclick="addNewNotice()">Add Notice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="inventory.js"></script>
+    
+    <script>
+        let auth;
+        $(document).ready(function() {
+            auth = checkAuthGuard('admin');
+            if(!auth) return;
+            
+            refreshAll();
+            
+            // Setup Issue Form listener
+            $('#issue-form').submit(function(e) {
+                e.preventDefault();
+                issueItem();
+            });
+        });
+
+        function refreshAll() {
+            renderInventory();
+            renderIssueOptions();
+            renderPendingReturns();
+            renderShifts();
+            renderVolunteers();
+            renderRecords();
+            renderNotices();
+            updateStats();
+        }
+
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        // --- Inventory Management ---
+        function renderInventory() {
+            const inventory = getInventory();
+            let html = '';
+            inventory.forEach(item => {
+                const issued = item.totalQty - item.available - (item.damaged || 0);
+                html += `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td class="font-weight-bold">${item.name}</td>
+                        <td>${item.totalQty}</td>
+                        <td class="${item.available > 0 ? 'text-success' : 'text-danger'}">${item.available}</td>
+                        <td><span class="badge badge-issued">${issued}</span></td>
+                        <td><span class="badge badge-damaged">${item.damaged || 0}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-synergy-outline" onclick="openEditItem(${item.id})">Edit</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            $('#admin-inventory-list').html(html);
+        }
+
+        function openEditItem(id) {
+            const inventory = getInventory();
+            const item = inventory.find(i => i.id === id);
+            if(item) {
+                $('#edit-item-id').val(item.id);
+                $('#edit-item-qty').val(item.totalQty);
+                $('#edit-item-damaged').val(item.damaged || 0);
+                $('#editItemModal').modal('show');
+            }
+        }
+
+        function saveItemEdit() {
+            const id = parseInt($('#edit-item-id').val());
+            const newTotal = parseInt($('#edit-item-qty').val());
+            const damaged = parseInt($('#edit-item-damaged').val());
+            
+            const inventory = getInventory();
+            const index = inventory.findIndex(i => i.id === id);
+            
+            if(index !== -1) {
+                // recalculate available: total - issued - damaged
+                const item = inventory[index];
+                const issued = item.totalQty - item.available - (item.damaged || 0);
+                item.totalQty = newTotal;
+                item.damaged = damaged;
+                item.available = item.totalQty - issued - item.damaged;
+                
+                if(item.available < 0) {
+                    showToast('Error: Available quantity cannot be negative.', 'danger');
+                    return;
+                }
+                
+                inventory[index] = item;
+                saveInventory(inventory);
+                $('#editItemModal').modal('hide');
+                showToast('Item updated');
+                refreshAll();
+            }
+        }
+
+        function addNewItem() {
+            const name = $('#add-item-name').val();
+            const qty = parseInt($('#add-item-qty').val());
+            if(!name || !qty) return;
+
+            const inventory = getInventory();
+            const newId = inventory.length > 0 ? Math.max(...inventory.map(i => i.id)) + 1 : 1;
+            inventory.push({ id: newId, name: name, totalQty: qty, available: qty, damaged: 0 });
+            saveInventory(inventory);
+            
+            $('#addItemModal').modal('hide');
+            showToast('Item added');
+            refreshAll();
+        }
+
+        // --- Issue / Return ---
+        function renderIssueOptions() {
+            const inventory = getInventory();
+            let html = '<option value="">Select Item...</option>';
+            inventory.filter(i => i.available > 0).forEach(item => {
+                html += `<option value="${item.id}">${item.name} (Avail: ${item.available})</option>`;
+            });
+            $('#issue-item').html(html);
+        }
+
+        function issueItem() {
+            const itemId = parseInt($('#issue-item').val());
+            const rollNo = $('#issue-roll').val();
+            const qty = parseInt($('#issue-qty').val());
+
+            if(!itemId || !rollNo || qty < 1) return;
+
+            const inventory = getInventory();
+            const itemIndex = inventory.findIndex(i => i.id === itemId);
+            if(itemIndex !== -1 && inventory[itemIndex].available >= qty) {
+                // Deduct from inventory
+                inventory[itemIndex].available -= qty;
+                saveInventory(inventory);
+
+                // Add to logs
+                const logs = getLogs();
+                logs.push({
+                    id: generateId(),
+                    itemId: itemId,
+                    itemName: inventory[itemIndex].name,
+                    qty: qty,
+                    studentRollNo: rollNo,
+                    issuedBy: auth.username,
+                    date: new Date().toISOString().split('T')[0],
+                    returned: false,
+                    returnDate: null
+                });
+                saveLogs(logs);
+
+                showToast('Equipment Issued Successfully');
+                $('#issue-form')[0].reset();
+                refreshAll();
+            } else {
+                showToast('Not enough quantity available.', 'danger');
+            }
+        }
+
+        function renderPendingReturns() {
+            const logs = getLogs().filter(l => !l.returned);
+            let html = '';
+            logs.forEach(log => {
+                html += `
+                    <tr>
+                        <td>${log.date}</td>
+                        <td class="font-weight-bold">${log.studentRollNo}</td>
+                        <td>${log.itemName}</td>
+                        <td>${log.qty}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="markReturned('${log.id}')">Mark Returned</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            if(logs.length === 0) html = '<tr><td colspan="5" class="text-center">No pending returns</td></tr>';
+            $('#pending-returns-list').html(html);
+        }
+
+        function markReturned(logId) {
+            const logs = getLogs();
+            const logIndex = logs.findIndex(l => l.id === logId);
+            if(logIndex !== -1 && !logs[logIndex].returned) {
+                logs[logIndex].returned = true;
+                logs[logIndex].returnDate = new Date().toISOString().split('T')[0];
+                
+                // Add back to inventory
+                const inventory = getInventory();
+                const invIndex = inventory.findIndex(i => i.id === logs[logIndex].itemId);
+                if(invIndex !== -1) {
+                    inventory[invIndex].available += logs[logIndex].qty;
+                    saveInventory(inventory);
+                }
+                saveLogs(logs);
+                showToast('Item marked as returned');
+                refreshAll();
+            }
+        }
+
+        // --- Shifts ---
+        function renderShifts() {
+            const shifts = getShifts();
+            const volunteers = getVolunteers();
+            let html = '';
+            shifts.forEach(shift => {
+                const assigned = shift.assigned || [];
+                let assignedNames = assigned.map(volId => {
+                    let v = volunteers.find(vol => vol.volunteerId === volId);
+                    return v ? `${v.name} (${volId})` : volId;
+                }).join('<br>');
+                
+                if(!assignedNames) assignedNames = 'None';
+
+                html += `
+                    <tr>
+                        <td>${shift.date}</td>
+                        <td>${shift.timeSlot}</td>
+                        <td>${assignedNames}</td>
+                        <td>
+                            <button class="btn btn-sm btn-synergy-outline mb-1" onclick="openAssignModal('${shift.id}')">Assign Vol.</button>
+                            <button class="btn btn-sm btn-danger mb-1" onclick="deleteShift('${shift.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            $('#admin-shifts-list').html(html);
+        }
+
+        function addNewShift() {
+            const date = $('#add-shift-date').val();
+            const time = $('#add-shift-time').val();
+            
+            if(!date || !time) return;
+
+            const shifts = getShifts();
+            shifts.push({ id: generateId(), date: date, timeSlot: time, assigned: [] });
+            saveShifts(shifts);
+            
+            $('#addShiftModal').modal('hide');
+            showToast('Shift created');
+            refreshAll();
+        }
+
+        function openAssignModal(shiftId) {
+            $('#assign-shift-id').val(shiftId);
+            const volunteers = getVolunteers();
+            let opts = '<option value="">-- Select Volunteer --</option>';
+            volunteers.forEach(v => {
+                opts += `<option value="${v.volunteerId}">${v.name} (${v.volunteerId})</option>`;
+            });
+            $('#assign-shift-volunteer').html(opts);
+            $('#assignShiftModal').modal('show');
+        }
+
+        function submitVolunteerAssign() {
+            const shiftId = $('#assign-shift-id').val();
+            const volId = $('#assign-shift-volunteer').val();
+            if(!volId) return;
+
+            let shifts = getShifts();
+            const index = shifts.findIndex(s => s.id === shiftId);
+            if(index !== -1) {
+                if(!shifts[index].assigned) shifts[index].assigned = [];
+                if(!shifts[index].assigned.includes(volId)) {
+                    shifts[index].assigned.push(volId);
+                    saveShifts(shifts);
+                    showToast('Volunteer assigned to shift');
+                    $('#assignShiftModal').modal('hide');
+                    refreshAll();
+                } else {
+                    showToast('Volunteer is already assigned to this shift', 'warning');
+                }
+            }
+        }
+
+        function deleteShift(id) {
+            if(confirm("Delete this shift?")) {
+                let shifts = getShifts();
+                shifts = shifts.filter(s => s.id !== id);
+                saveShifts(shifts);
+                showToast('Shift deleted');
+                refreshAll();
+            }
+        }
+
+        // --- Volunteer Management ---
+        function renderVolunteers() {
+            const apps = getVolunteerApps().filter(a => a.status === 'Pending');
+            let appsHtml = '';
+            apps.forEach(app => {
+                appsHtml += `
+                    <tr>
+                        <td>${app.dateSubmitted}</td>
+                        <td class="font-weight-bold">${app.name}</td>
+                        <td>${app.enrollment}</td>
+                        <td>${app.sports}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="approveVolunteer(${app.id})">Approve</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            if(apps.length === 0) appsHtml = '<tr><td colspan="5" class="text-center">No pending applications</td></tr>';
+            $('#admin-pending-apps-list').html(appsHtml);
+
+            const vols = getVolunteers();
+            let volsHtml = '';
+            vols.forEach(v => {
+                volsHtml += `
+                    <tr>
+                        <td class="font-weight-bold text-success">${v.volunteerId}</td>
+                        <td>${v.name}</td>
+                        <td>${v.enrollment}</td>
+                        <td><code class="text-light">${v.password}</code></td>
+                    </tr>
+                `;
+            });
+            if(vols.length === 0) volsHtml = '<tr><td colspan="4" class="text-center">No approved volunteers yet</td></tr>';
+            $('#admin-approved-volunteers-list').html(volsHtml);
+        }
+
+        function approveVolunteer(appId) {
+            let apps = getVolunteerApps();
+            const index = apps.findIndex(a => a.id === appId);
+            if(index !== -1) {
+                const app = apps[index];
+                app.status = 'Approved';
+                
+                // Generate credentials
+                const volId = 'VOL' + Math.floor(1000 + Math.random() * 9000);
+                const password = app.name.split(' ')[0].toLowerCase() + '@' + volId;
+
+                const newVol = {
+                    volunteerId: volId,
+                    password: password,
+                    name: app.name,
+                    enrollment: app.enrollment,
+                    sports: app.sports,
+                    type: app.type
+                };
+
+                let vols = getVolunteers();
+                vols.push(newVol);
+                saveVolunteers(vols);
+
+                apps[index] = app;
+                saveVolunteerApps(apps);
+
+                showToast(`Volunteer Approved! ID: ${volId}`);
+                refreshAll();
+            }
+        }
+
+        // --- Records ---
+        function renderRecords() {
+            const logs = getLogs().sort((a,b) => new Date(b.date) - new Date(a.date));
+            let html = '';
+            logs.forEach(log => {
+                html += `
+                    <tr>
+                        <td>${log.date}</td>
+                        <td class="font-weight-bold">${log.studentRollNo}</td>
+                        <td>${log.itemName}</td>
+                        <td>${log.qty}</td>
+                        <td>${log.issuedBy}</td>
+                        <td>${log.returned ? '<span class="badge badge-available">Returned</span>' : '<span class="badge badge-issued">Pending</span>'}</td>
+                        <td>${log.returnDate || '-'}</td>
+                    </tr>
+                `;
+            });
+            $('#admin-records-list').html(html);
+        }
+
+        function exportCSV() {
+            const logs = getLogs();
+            if(logs.length === 0) {
+                showToast('No data to export', 'warning');
+                return;
+            }
+            
+            const headers = ['Date Issued', 'Student Roll No', 'Item ID', 'Item Name', 'Qty', 'Issued By', 'Status', 'Return Date'];
+            const rows = logs.map(l => [
+                l.date, l.studentRollNo, l.itemId, l.itemName, l.qty, l.issuedBy, 
+                l.returned ? 'Returned' : 'Pending', l.returnDate || ''
+            ]);
+            
+            let csvContent = "data:text/csv;charset=utf-8," 
+                + headers.join(",") + "\\n" 
+                + rows.map(e => e.join(",")).join("\\n");
+                
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "synergy_inventory_logs.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- Notices ---
+        function renderNotices() {
+            const notices = JSON.parse(localStorage.getItem('synergy_notices') || '[]');
+            let html = '';
+            notices.forEach(n => {
+                html += `
+                    <div class="notice-board position-relative">
+                        <button class="btn btn-sm btn-danger position-absolute" style="top:10px; right:10px;" onclick="deleteNotice(${n.id})">Delete</button>
+                        <h4>${n.title}</h4>
+                        <div class="mt-3 text-light">${n.body}</div>
+                        <small class="text-muted mt-2 d-block">Posted on: ${n.date}</small>
+                    </div>
+                `;
+            });
+            $('#admin-notices-list').html(html);
+        }
+
+        function addNewNotice() {
+            const title = $('#add-notice-title').val();
+            const body = $('#add-notice-body').val();
+            if(!title || !body) return;
+
+            const notices = JSON.parse(localStorage.getItem('synergy_notices') || '[]');
+            const newId = notices.length > 0 ? Math.max(...notices.map(n => n.id)) + 1 : 1;
+            
+            notices.push({ id: newId, title: title, body: body, date: new Date().toISOString().split('T')[0] });
+            localStorage.setItem('synergy_notices', JSON.stringify(notices));
+            
+            $('#addNoticeModal').modal('hide');
+            showToast('Notice added');
+            refreshAll();
+        }
+
+        function deleteNotice(id) {
+            if(confirm("Delete notice?")) {
+                let notices = JSON.parse(localStorage.getItem('synergy_notices') || '[]');
+                notices = notices.filter(n => n.id !== id);
+                localStorage.setItem('synergy_notices', JSON.stringify(notices));
+                showToast('Notice deleted');
+                refreshAll();
+            }
+        }
+
+        // --- Stats ---
+        function updateStats() {
+            const inventory = getInventory();
+            const logs = getLogs();
+            const shifts = getShifts();
+            const notices = JSON.parse(localStorage.getItem('synergy_notices') || '[]');
+            
+            $('#stat-total-items').text(inventory.reduce((sum, i) => sum + i.totalQty, 0));
+            $('#stat-issued-items').text(logs.filter(l => !l.returned).reduce((sum, l) => sum + l.qty, 0));
+            $('#stat-upcoming-shifts').text(shifts.length);
+            $('#stat-active-notices').text(notices.length);
+        }
+    </script>
+</body>
+</html>
+
+

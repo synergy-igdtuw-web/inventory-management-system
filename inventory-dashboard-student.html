@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Student Dashboard - Synergy Inventory</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Custom Inventory Styles -->
+    <link rel="stylesheet" href="inventory.css">
+    <link rel="shortcut icon" href="img/synergy.jpeg">
+</head>
+
+<body>
+
+    <!-- Header Start -->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="inventory.html"><span><img src="img/FooterLogo.png" alt="" > </span></a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+            <style>
+                .navbar-brand img { width: 80px; height: 40px; }
+            </style>
+           
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="inventory.html" class="nav-link">Home</a></li>
+                    <li class="nav-item active"><a href="inventory.html" class="nav-link">Inventory Portal</a></li>
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" onclick="logout()" class="nav-link text-danger font-weight-bold">Logout (<span id="user-display-name"></span>)</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END nav -->
+
+    <div class="container-fluid mt-5 pt-4 mb-5">
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <h2 class="text-white font-weight-bold">Student / Volunteer Dashboard</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3 mb-4">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-issued-tab" data-toggle="pill" href="#v-pills-issued" role="tab" aria-controls="v-pills-issued" aria-selected="true">My Issued Items</a>
+                    <a class="nav-link" id="v-pills-inventory-tab" data-toggle="pill" href="#v-pills-inventory" role="tab" aria-controls="v-pills-inventory" aria-selected="false">Available Inventory</a>
+                    <a class="nav-link" id="v-pills-shifts-tab" data-toggle="pill" href="#v-pills-shifts" role="tab" aria-controls="v-pills-shifts" aria-selected="false">Volunteer Shifts</a>
+                    <a class="nav-link" id="v-pills-log-tab" data-toggle="pill" href="#v-pills-log" role="tab" aria-controls="v-pills-log" aria-selected="false">My Activity Log</a>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="col-md-9">
+                <div class="tab-content bg-dark p-4 rounded border border-secondary" id="v-pills-tabContent">
+                    
+                    <!-- B. My Issued Items -->
+                    <div class="tab-pane fade show active" id="v-pills-issued" role="tabpanel" aria-labelledby="v-pills-issued-tab">
+                        <h4 class="text-white mb-4">My Issued Items</h4>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Date Issued</th>
+                                        <th>Item Name</th>
+                                        <th>Qty</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="student-issued-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- A. Available Inventory -->
+                    <div class="tab-pane fade" id="v-pills-inventory" role="tabpanel" aria-labelledby="v-pills-inventory-tab">
+                        <h4 class="text-white mb-4">Available Inventory</h4>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th>Available Quantity</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="student-inventory-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- C. Volunteer Shifts -->
+                    <div class="tab-pane fade" id="v-pills-shifts" role="tabpanel" aria-labelledby="v-pills-shifts-tab">
+                        <h4 class="text-white mb-4">Upcoming Shifts</h4>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time Slot</th>
+                                        <th>Assigned Volunteers</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="student-shifts-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- D. My Activity Log -->
+                    <div class="tab-pane fade" id="v-pills-log" role="tabpanel" aria-labelledby="v-pills-log-tab">
+                        <h4 class="text-white mb-4">My Activity Log</h4>
+                        <div class="table-responsive">
+                            <table class="table table-inventory">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Item</th>
+                                        <th>Qty</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="student-log-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Issue Item Modal -->
+    <div class="modal fade" id="issueItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Issue Equipment</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="volunteer-issue-form">
+                        <input type="hidden" id="issue-item-id">
+                        <div class="form-group mb-3">
+                            <label>Item Name</label>
+                            <input type="text" class="form-control" id="issue-item-name" readonly>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Borrower Roll Number</label>
+                            <input type="text" class="form-control" id="issue-borrower-roll" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Quantity</label>
+                            <input type="number" class="form-control" id="issue-qty" min="1" value="1" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Borrower ID Card (Upload)</label>
+                            <input type="file" class="form-control-file text-light" id="issue-id-proof" required accept="image/*">
+                            <small class="text-muted">Capture or upload ID card photo for security.</small>
+                        </div>
+                        <button type="submit" class="btn btn-synergy-primary btn-block">Issue Item</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="inventory.js"></script>
+    
+    <script>
+        let auth;
+        $(document).ready(function() {
+            auth = checkAuthGuard('student');
+            if(!auth) return;
+            
+            refreshAll();
+        });
+
+        function refreshAll() {
+            renderMyIssuedItems();
+            renderInventory();
+            renderShifts();
+            renderActivityLog();
+        }
+
+        $(document).on('submit', '#volunteer-issue-form', function(e) {
+            e.preventDefault();
+            issueItemAsVolunteer();
+        });
+
+        // --- My Issued Items ---
+        function renderMyIssuedItems() {
+            const logs = getLogs().filter(l => l.studentRollNo === auth.username && !l.returned);
+            let html = '';
+            logs.forEach(log => {
+                html += `
+                    <tr>
+                        <td>${log.date}</td>
+                        <td class="font-weight-bold">${log.itemName}</td>
+                        <td>${log.qty}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="markReturned('${log.id}')">Return Item</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            if(logs.length === 0) html = '<tr><td colspan="4" class="text-center">No items currently issued</td></tr>';
+            $('#student-issued-list').html(html);
+        }
+
+        // Allow student to return their own item (simulating physical return logged by volunteer/student)
+        function markReturned(logId) {
+            if(confirm("Confirm return of this item?")) {
+                const logs = getLogs();
+                const logIndex = logs.findIndex(l => l.id === logId);
+                if(logIndex !== -1 && !logs[logIndex].returned && logs[logIndex].studentRollNo === auth.username) {
+                    logs[logIndex].returned = true;
+                    logs[logIndex].returnDate = new Date().toISOString().split('T')[0];
+                    
+                    // Add back to inventory
+                    const inventory = getInventory();
+                    const invIndex = inventory.findIndex(i => i.id === logs[logIndex].itemId);
+                    if(invIndex !== -1) {
+                        inventory[invIndex].available += logs[logIndex].qty;
+                        saveInventory(inventory);
+                    }
+                    saveLogs(logs);
+                    showToast('Item marked as returned');
+                    refreshAll();
+                }
+            }
+        }
+
+        // --- Available Inventory ---
+        function renderInventory() {
+            const inventory = getInventory();
+            let html = '';
+            inventory.forEach(item => {
+                const statusBadge = item.available > 0 
+                    ? '<span class="badge badge-available">In Stock</span>' 
+                    : '<span class="badge badge-issued">Out of Stock</span>';
+                html += `
+                    <tr>
+                        <td class="font-weight-bold">${item.name}</td>
+                        <td class="${item.available > 0 ? 'text-success' : 'text-danger'}">${item.available}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            ${item.available > 0 ? `<button class="btn btn-sm btn-synergy-primary" onclick="openIssueModal(${item.id}, '${item.name}')">Issue</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+            $('#student-inventory-list').html(html);
+        }
+
+        function openIssueModal(id, name) {
+            $('#issue-item-id').val(id);
+            $('#issue-item-name').val(name);
+            $('#volunteer-issue-form')[0].reset();
+            $('#issueItemModal').modal('show');
+        }
+
+        function issueItemAsVolunteer() {
+            const itemId = parseInt($('#issue-item-id').val());
+            const rollNo = $('#issue-borrower-roll').val();
+            const qty = parseInt($('#issue-qty').val());
+            const idProofFile = $('#issue-id-proof')[0].files[0];
+
+            if(!itemId || !rollNo || qty < 1 || !idProofFile) return;
+
+            const inventory = getInventory();
+            const itemIndex = inventory.findIndex(i => i.id === itemId);
+            
+            if(itemIndex !== -1 && inventory[itemIndex].available >= qty) {
+                // Deduct from inventory
+                inventory[itemIndex].available -= qty;
+                saveInventory(inventory);
+
+                // Add to logs
+                const logs = getLogs();
+                logs.push({
+                    id: generateId(),
+                    itemId: itemId,
+                    itemName: inventory[itemIndex].name,
+                    qty: qty,
+                    studentRollNo: rollNo, // borrower
+                    issuedBy: auth.username, // volunteer ID doing the issuing
+                    idProofName: idProofFile.name, // mock storage of ID file
+                    date: new Date().toISOString().split('T')[0],
+                    returned: false,
+                    returnDate: null
+                });
+                saveLogs(logs);
+
+                showToast('Equipment Issued Successfully. ID proof saved.');
+                $('#issueItemModal').modal('hide');
+                refreshAll();
+            } else {
+                showToast('Not enough quantity available.', 'danger');
+            }
+        }
+
+        // --- Shifts ---
+        function renderShifts() {
+            const shifts = getShifts();
+            const volunteers = getVolunteers();
+            let html = '';
+            
+            // Only show shifts where this volunteer is assigned
+            const myShifts = shifts.filter(s => (s.assigned || []).includes(auth.username));
+            
+            myShifts.forEach(shift => {
+                const assigned = shift.assigned || [];
+                let assignedNames = assigned.map(volId => {
+                    let v = volunteers.find(vol => vol.volunteerId === volId);
+                    return v ? v.name : volId;
+                }).join(', ');
+
+                html += `
+                    <tr>
+                        <td>${shift.date}</td>
+                        <td>${shift.timeSlot}</td>
+                        <td>${assignedNames}</td>
+                    </tr>
+                `;
+            });
+            if(myShifts.length === 0) html = '<tr><td colspan="3" class="text-center">No upcoming shifts assigned to you</td></tr>';
+            $('#student-shifts-list').html(html);
+        }
+
+
+
+        // --- Activity Log ---
+        function renderActivityLog() {
+            const logs = getLogs().filter(l => l.studentRollNo === auth.username).sort((a,b) => new Date(b.date) - new Date(a.date));
+            let html = '';
+            logs.forEach(log => {
+                // Issue entry
+                html += `
+                    <tr>
+                        <td>${log.date}</td>
+                        <td>${log.itemName}</td>
+                        <td>${log.qty}</td>
+                        <td><span class="badge badge-issued">Issued</span></td>
+                    </tr>
+                `;
+                // Return entry if returned
+                if(log.returned) {
+                    html += `
+                        <tr>
+                            <td>${log.returnDate}</td>
+                            <td>${log.itemName}</td>
+                            <td>${log.qty}</td>
+                            <td><span class="badge badge-available">Returned</span></td>
+                        </tr>
+                    `;
+                }
+            });
+            if(logs.length === 0) html = '<tr><td colspan="4" class="text-center">No activity log</td></tr>';
+            $('#student-log-list').html(html);
+        }
+    </script>
+</body>
+</html>
+
+
