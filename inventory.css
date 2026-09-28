@@ -1,0 +1,198 @@
+/* Inventory Portal Custom Styles */
+
+body {
+    background-color: #0d1117; /* Dark navy / black */
+    color: #e6edf3; /* Off white text */
+    font-family: 'Nunito Sans', Arial, sans-serif;
+}
+
+.inventory-header {
+    background: linear-gradient(135deg, #1f1f1f 0%, #000000 100%);
+    padding: 60px 0;
+    text-align: center;
+    border-bottom: 3px solid #ff8a00;
+}
+
+.inventory-header h1 {
+    color: #ffd24d;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.notice-board {
+    background-color: #161b22;
+    border-left: 5px solid #ffd24d;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 30px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.notice-board h4 {
+    color: #ffd24d;
+    font-weight: 700;
+}
+
+/* Tables */
+.table-inventory {
+    background-color: #161b22 !important;
+    color: #e6edf3 !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-inventory thead, .table-inventory thead th {
+    background-color: #21262d !important;
+    color: #ffd24d !important;
+    border-color: #30363d !important;
+}
+
+.table-inventory tbody tr, .table-inventory tbody td {
+    background-color: #161b22 !important;
+    color: #e6edf3 !important;
+    border-color: #30363d !important;
+    vertical-align: middle !important;
+}
+
+.table.table-inventory tbody tr:hover, .table.table-inventory tbody tr:hover td {
+    background-color: #1f242b !important;
+    color: #ffffff !important;
+}
+
+/* Badges */
+.badge-available {
+    background-color: #238636;
+    color: white;
+}
+
+.badge-issued {
+    background-color: #da3633;
+    color: white;
+}
+
+.badge-damaged {
+    background-color: #d29922;
+    color: white;
+}
+
+/* Buttons */
+.btn-synergy-primary {
+    background: linear-gradient(135deg, #ffd24d 0%, #ff8a00 100%);
+    color: #1f1200;
+    font-weight: 700;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-synergy-primary:hover {
+    color: #1a0f00;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 127, 0, 0.4);
+}
+
+.btn-synergy-outline {
+    background: transparent;
+    color: #ffd24d;
+    border: 2px solid #ffd24d;
+    font-weight: 700;
+}
+
+.btn-synergy-outline:hover {
+    background-color: #ffd24d;
+    color: #1f1200;
+}
+
+/* Dashboard Sidebar/Tabs styling */
+.nav-pills .nav-link {
+    color: #e6edf3;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #ff8a00;
+    color: #fff;
+}
+
+/* Modals */
+.modal-content {
+    background-color: #161b22;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+}
+
+.modal-header {
+    border-bottom: 1px solid #30363d;
+}
+
+.modal-footer {
+    border-top: 1px solid #30363d;
+}
+
+.form-control {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+}
+
+.form-control:focus {
+    background-color: #0d1117;
+    color: #e6edf3;
+    border-color: #ff8a00;
+    box-shadow: 0 0 0 0.2rem rgba(255, 138, 0, 0.25);
+}
+
+/* Login Card */
+.login-card {
+    background-color: #161b22;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    border-top: 4px solid #ff8a00;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #30363d;
+}
+
+.nav-tabs .nav-link {
+    color: #8b949e;
+    border: none;
+    border-bottom: 3px solid transparent;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: transparent;
+    color: #e6edf3;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: transparent;
+    color: #ffd24d;
+    border-bottom: 3px solid #ffd24d;
+}
+
+/* Quick Stats */
+.stat-card {
+    background-color: #161b22;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #30363d;
+}
+
+.stat-card h3 {
+    color: #ffd24d;
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.stat-card p {
+    margin-bottom: 0;
+    color: #8b949e;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
